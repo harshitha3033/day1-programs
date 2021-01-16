@@ -1,129 +1,89 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+Leetcode problem name :NUMBER OF ISLANDS
 
-# C extensions
-*.so
+class Solution {
+    public int numIslands(char[][] grid) {
+         int count_of_islands=0;
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[i].length;j++){
+                if(grid[i][j]=='1'){
+                    count_of_islands+=1;
+                    bfs(grid,i,j);
+                }
+            }
+        }
+        return count_of_islands;
+    }
+    public void bfs(char grid[][],int i,int j){
+        if(i<0||i>=grid.length||j<0||j>=grid[i].length||grid[i][j]=='0')
+            return;
+        grid[i][j]='0';
+        bfs(grid,i+1,j);
+        bfs(grid,i-1,j);
+        bfs(grid,i,j-1);
+        bfs(grid,i,j+1);
+        
+    }
+}
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+leetcode problem name:ROTTING ORANGES
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        fresh = set()
+        rotton = set()
+        m = len(grid)
+        n = len(grid[0])
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 2:
+                    rotton.add((i,j))
+                elif grid[i][j] == 1:
+                    fresh.add((i, j)) 
+        mins = 0
+        dirs = [(1,0), (-1,0), (0,1), (0,-1)]
+        while len(fresh) > 0:
+            infected = set()
+            for r in rotton:
+                row = r[0]
+                col = r[1]
+                for dir in dirs:
+                    new_row = dir[0] + row
+                    new_col = dir[1] + col
+                    if (new_row, new_col) in fresh:
+                        fresh.remove((new_row, new_col))
+                        infected.add((new_row, new_col))   
+            if len(infected) == 0:
+                return -1
+            rotton = infected
+            mins += 1
+        return mins
+        
+        
+leetcode Problem Name: Flood-fill
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, newColor: int) -> List[List[int]]:
+        r = len(image)
+        c = len(image[0])
+        
+        visited = [False]*r
+        for i in range(r):
+            visited[i] = [False]*c
+        
+        def fill(i,j,source_value):
+            if i<0 or i>=r or j<0 or j>=c:
+                return
+            
+            curr_value = image[i][j]
+            
+            if curr_value == source_value and visited[i][j] == False:
+                visited[i][j] = True
+                fill(i+1,j,curr_value)
+                fill(i-1,j,curr_value)
+                fill(i,j+1,curr_value)
+                fill(i,j-1,curr_value)
+                image[i][j] = newColor
+        
+        fill(sr,sc,image[sr][sc])
+        return image
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
